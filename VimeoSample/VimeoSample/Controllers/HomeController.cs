@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using VimeoDotNet;
 using VimeoSample.Models;
 
 namespace VimeoSample.Controllers
@@ -12,14 +13,24 @@ namespace VimeoSample.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        string accessToken = "d7bdf445753dfe5978f018cd97ff82d4";
 
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            try
+            {
+                VimeoClient vimeoClient = new VimeoClient(accessToken);
+                var authcheck = await vimeoClient.GetAccountInformationAsync();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("ERRO: " + e.Message);
+            }
             return View();
         }
 
