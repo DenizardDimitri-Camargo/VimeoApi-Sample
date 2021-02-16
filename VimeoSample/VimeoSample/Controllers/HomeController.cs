@@ -17,10 +17,11 @@ namespace VimeoSample.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        //d7bdf445753dfe5978f018cd97ff82d4
+        //d7bdf445753dfe5978f018cd97ff82d4 não faz upload
         //afc3f4e971b21d2195081b7f4769c3be
+        //8e631984a554c671698d0f2a49cf2edc
 
-        string accessToken = "afc3f4e971b21d2195081b7f4769c3be";
+        string accessToken = "8e631984a554c671698d0f2a49cf2edc";
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -89,6 +90,28 @@ namespace VimeoSample.Controllers
             }
             ViewBag.UploadStatus = uploadstatus;
             return View();
+        }
+
+        public async Task<JsonResult> DeleteVideo(long videoId = 0)
+        {
+            var deleteStatus = "";
+
+            try
+            {
+                if (videoId > 0)
+                {
+                    VimeoClient vimeoClient = new VimeoClient(accessToken);
+
+                    await vimeoClient.DeleteVideoAsync(videoId);
+
+                    deleteStatus = "deleted";
+                }
+            }
+            catch (Exception e)
+            {
+                deleteStatus = "ERRO: " + e.Message;
+            }
+            return Json(deleteStatus); /* , jsonrequestbehavior.allowget(.net) */
         }
 
         public IActionResult Privacy()
