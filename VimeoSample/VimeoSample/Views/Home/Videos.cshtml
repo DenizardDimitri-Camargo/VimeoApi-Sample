@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewData["Title"] = "Uploaded Videos";
+    string videosrc = "https://player.vimeo.com/video/512972810";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+
+<style>
+    .embed-container {
+        position: relative;
+        padding-bottom: 56.25%;
+        height: 0;
+        overflow: hidden;
+        max-width: 100%;
+    }
+
+        .embed-container iframe,
+        .embed-container object,
+        .embed-container embed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+</style>
+
+<h2>Embed Vimeo Responsive</h2>
+<div>
+    <div class="embed-container">
+        <iframe src="@videosrc" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+    </div>
+</div>
+
+<!-- Estudonauta -->
+@*<iframe src="https://player.vimeo.com/video/255526336?dnt=1&amp;app_id=122963" width="1170" height="658" frameborder="0" allow="autoplay; fullscreen" allowfullscreen=""></iframe>*@
+
+

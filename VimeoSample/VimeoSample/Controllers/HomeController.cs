@@ -114,6 +114,11 @@ namespace VimeoSample.Controllers
             return Json(deleteStatus); /* , jsonrequestbehavior.allowget(.net) */
         }
 
+        public async Task<IActionResult> Videos()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();
