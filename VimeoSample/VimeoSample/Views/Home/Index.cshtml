@@ -6,3 +6,15 @@
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+<!-- falta último param no using... ver VIDEO2-->
+@using (@Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+<div class="row">
+    <div class="col-md-4">
+        <label>Select File:</label>
+        <input type="file" id="file" name="file"/>
+
+        <button type="submit">Submit</button>
+    </div>
+</div>
+}
