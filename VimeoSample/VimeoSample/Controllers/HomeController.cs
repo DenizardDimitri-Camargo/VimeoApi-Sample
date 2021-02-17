@@ -105,6 +105,13 @@ namespace VimeoSample.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Uploaded()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            ViewBag.ClipId = user.ClipIdUser.ToString();
+            return View();
+        }
+
         public async Task<JsonResult> DeleteVideo(long videoId = 0)
         {
             var deleteStatus = "";

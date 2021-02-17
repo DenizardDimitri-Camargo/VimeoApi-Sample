@@ -1,0 +1,15 @@
+﻿
+@{
+    ViewData["Title"] = "Uploaded Videos";
+    string videosrc = "https://player.vimeo.com/video/" + ViewBag.ClipId;
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h1>ClipId: @ViewBag.ClipId</h1>
+
+<div>
+    <div class="embed-container">
+        <iframe src="@videosrc" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+    </div>
+</div>
