@@ -11,22 +11,30 @@ using Newtonsoft;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using VimeoDotNet.Net;
+using Microsoft.AspNetCore.Identity;
+using VimeoSample.Data;
 
 namespace VimeoSample.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        //d7bdf445753dfe5978f018cd97ff82d4 não faz upload
-        //afc3f4e971b21d2195081b7f4769c3be
         //8e631984a554c671698d0f2a49cf2edc
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ApplicationDbContext _applicationDbContext;
+        //ApplicationUser applicationUser = new ApplicationUser();
 
-        string accessToken = "8e631984a554c671698d0f2a49cf2edc";
-
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ApplicationUser user, ApplicationDbContext applicationDbContext)
         {
             _logger = logger;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _applicationDbContext = applicationDbContext;
+            //applicationUser = user;
         }
+        
+        string accessToken = "8e631984a554c671698d0f2a49cf2edc";
 
         public async Task<IActionResult> Index() //video 1: Authorization
         {
@@ -76,6 +84,11 @@ namespace VimeoSample.Controllers
                         int chunksize = unchecked((int)chunksizeLong); //converte de long para int (https://stackoverflow.com/questions/858904/can-i-convert-long-to-int)
                         uploadRequest = await vimeoClient.UploadEntireFileAsync(binaryContent, chunksize, null);
                         uploadstatus = String.Concat("file uploaded ", "https://vimeo.com/", uploadRequest.ClipId.Value.ToString(), "/none");
+                        //_applicationDbContext.ApplicationUser = uploadRequest.ClipId.Value;
+                        var user = await _userManager.GetUserAsync(User); //obtém Denizard
+                        user.ClipIdUser = uploadRequest.ClipId.Value; // coloco o ClipId no user Denizard
+
+                        _applicationDbContext.SaveChanges(); // salvo as mudanças do user Denizard
                     }
 
                 }
