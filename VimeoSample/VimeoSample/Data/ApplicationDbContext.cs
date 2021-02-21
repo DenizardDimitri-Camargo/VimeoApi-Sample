@@ -14,6 +14,7 @@ namespace VimeoSample.Data
         {
         }
 
-        //public DbSet<ApplicationUser> ApplicationUser { get; set; }
+        public DbSet<ApplicationUser> ApplicationUser { get; set; }
+        public DbSet<LocalUploadRequest> localUploadRequests { get; set; }
     }
 }

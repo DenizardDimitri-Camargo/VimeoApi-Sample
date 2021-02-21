@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 using VimeoDotNet.Net;
 using Microsoft.AspNetCore.Identity;
 using VimeoSample.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace VimeoSample.Controllers
 {
@@ -36,6 +37,7 @@ namespace VimeoSample.Controllers
         
         string accessToken = "8e631984a554c671698d0f2a49cf2edc";
 
+        [Authorize]
         public async Task<IActionResult> Index() //video 1: Authorization
         {
             try
@@ -50,6 +52,7 @@ namespace VimeoSample.Controllers
             return View();
         }
 
+        [Authorize]
         public async Task<IActionResult> Upload() //HttpPostedFile(.net) == IFormFile
         {
             var files = Request.Form.Files; //Request.File(.net) == Request.Form.Files
@@ -86,7 +89,18 @@ namespace VimeoSample.Controllers
                         uploadstatus = String.Concat("file uploaded ", "https://vimeo.com/", uploadRequest.ClipId.Value.ToString(), "/none");
                         //_applicationDbContext.ApplicationUser = uploadRequest.ClipId.Value;
                         var user = await _userManager.GetUserAsync(User); //obtém Denizard
-                        user.ClipIdUser = uploadRequest.ClipId.Value; // coloco o ClipId no user Denizard
+                        //user.ClipIdUser = uploadRequest.ClipId.Value; // coloco o ClipId no user Denizard
+
+                        Error uploading file chunkUma tentativa de conexão falhou porque o componente conectado não respondeu corretamente após um período de tempo ou a conexão estabelecida falhou porque o host conectado não respondeu. (1512435583.cloud.vimeo.com:443)
+                        user.UploadRequests.Add(new LocalUploadRequest(
+                            uploadRequest.ChunkSize,
+                            uploadRequest.BytesWritten,
+                            uploadRequest.IsVerifiedComplete,
+                            uploadRequest.ClipUri,
+                            uploadRequest.FileLength,
+                            uploadRequest.ClipId,
+                            user                            
+                        ));
 
                         _applicationDbContext.SaveChanges(); // salvo as mudanças do user Denizard
                     }
@@ -108,8 +122,12 @@ namespace VimeoSample.Controllers
         public async Task<IActionResult> Uploaded()
         {
             var user = await _userManager.GetUserAsync(User);
-            ViewBag.ClipId = user.ClipIdUser.ToString();
-            return View();
+            var result = _applicationDbContext.localUploadRequests.Where(x => x.ApplicationUser.Id.Equals(user.Id)).ToList();
+            //ViewBag.ClipId = user.ClipIdUser.ToString(); //só um video
+            //var result = user.UploadRequests.Where(x => x.ClipId.HasValue).ToList();
+            //var userVideos = user.UserVideos(user.Id);
+            //ViewBag.ClipId = userVideos;
+            return View(result);
         }
 
         public async Task<JsonResult> DeleteVideo(long videoId = 0)

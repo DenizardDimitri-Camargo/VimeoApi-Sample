@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VimeoSample.Data;
 
-namespace VimeoSample.Data.Migrations
+namespace VimeoSample.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210221040926_UploadRequestDbContext")]
+    partial class UploadRequestDbContext
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -162,9 +164,6 @@ namespace VimeoSample.Data.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<long>("ClipIdUser")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -222,6 +221,41 @@ namespace VimeoSample.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("VimeoSample.Models.LocalUploadRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<long>("BytesWritten")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("ChunkSize")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("ClipId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ClipUri")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("FileLength")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsVerifiedComplete")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("localUploadRequests");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -271,6 +305,20 @@ namespace VimeoSample.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("VimeoSample.Models.LocalUploadRequest", b =>
+                {
+                    b.HasOne("VimeoSample.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("UploadRequests")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.Navigation("ApplicationUser");
+                });
+
+            modelBuilder.Entity("VimeoSample.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("UploadRequests");
                 });
 #pragma warning restore 612, 618
         }

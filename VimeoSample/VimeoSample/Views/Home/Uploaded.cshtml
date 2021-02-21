@@ -1,15 +1,26 @@
-﻿
+﻿@model IEnumerable<VimeoSample.Models.LocalUploadRequest>
+
 @{
     ViewData["Title"] = "Uploaded Videos";
-    string videosrc = "https://player.vimeo.com/video/" + ViewBag.ClipId;
+    string videosrc = "https://player.vimeo.com/video/" + Model;
 }
 
 <h1>@ViewData["Title"]</h1>
 
 <h1>ClipId: @ViewBag.ClipId</h1>
 
-<div>
+@*<div>
     <div class="embed-container">
         <iframe src="@videosrc" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
     </div>
-</div>
+</div>*@
+
+
+<ol>
+    @foreach (var item in Model)
+    {
+        <li>
+            <iframe src="https://player.vimeo.com/video/@item.ClipId" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+        </li>
+    }
+</ol>
