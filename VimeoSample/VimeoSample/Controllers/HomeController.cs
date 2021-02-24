@@ -91,7 +91,7 @@ namespace VimeoSample.Controllers
                         var user = await _userManager.GetUserAsync(User); //obtém Denizard
                         //user.ClipIdUser = uploadRequest.ClipId.Value; // coloco o ClipId no user Denizard
 
-                        Error uploading file chunkUma tentativa de conexão falhou porque o componente conectado não respondeu corretamente após um período de tempo ou a conexão estabelecida falhou porque o host conectado não respondeu. (1512435583.cloud.vimeo.com:443)
+                        
                         user.UploadRequests.Add(new LocalUploadRequest(
                             uploadRequest.ChunkSize,
                             uploadRequest.BytesWritten,
@@ -123,10 +123,7 @@ namespace VimeoSample.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             var result = _applicationDbContext.localUploadRequests.Where(x => x.ApplicationUser.Id.Equals(user.Id)).ToList();
-            //ViewBag.ClipId = user.ClipIdUser.ToString(); //só um video
-            //var result = user.UploadRequests.Where(x => x.ClipId.HasValue).ToList();
-            //var userVideos = user.UserVideos(user.Id);
-            //ViewBag.ClipId = userVideos;
+            
             return View(result);
         }
 
