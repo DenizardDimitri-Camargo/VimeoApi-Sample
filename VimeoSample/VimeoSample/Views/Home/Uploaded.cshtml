@@ -10,17 +10,18 @@
 <h1>ClipId: @ViewBag.ClipId</h1>
 
 @*<div>
-    <div class="embed-container">
-        <iframe src="@videosrc" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-    </div>
-</div>*@
+        <div class="embed-container">
+            <iframe src="@videosrc" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>*@
 
 
 <ol>
     @foreach (var item in Model)
     {
-        <li>
-            <iframe src="https://player.vimeo.com/video/@item.ClipId" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-        </li>
+    <li>
+        <iframe src="https://player.vimeo.com/video/@item.ClipId" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+        <a asp-action="DeleteVideo" asp-route-clipid="@item.ClipId.Value">Delete By ClipId</a>
+    </li>
     }
 </ol>

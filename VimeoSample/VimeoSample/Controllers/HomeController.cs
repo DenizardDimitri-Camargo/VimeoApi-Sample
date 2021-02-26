@@ -127,26 +127,27 @@ namespace VimeoSample.Controllers
             return View(result);
         }
 
-        public async Task<JsonResult> DeleteVideo(long videoId = 0)
+        public async Task<IActionResult> DeleteVideo(long? clipId)
         {
-            var deleteStatus = "";
-
             try
             {
-                if (videoId > 0)
+                if (clipId > 0)
                 {
                     VimeoClient vimeoClient = new VimeoClient(accessToken);
 
-                    await vimeoClient.DeleteVideoAsync(videoId);
+                    await vimeoClient.DeleteVideoAsync(clipId.Value); //apaga do vimeo
+                    var video = _applicationDbContext.localUploadRequests.Where(x => x.ClipId == clipId).FirstOrDefault();
+                    _applicationDbContext.localUploadRequests.Remove(video); //apaga do sql
+                    await _applicationDbContext.SaveChangesAsync();
 
-                    deleteStatus = "deleted";
+                    ViewBag.status = "deleted";
                 }
             }
             catch (Exception e)
             {
-                deleteStatus = "ERRO: " + e.Message;
+                ViewBag.status = "ERRO: " + e.Message;
             }
-            return Json(deleteStatus); /* , jsonrequestbehavior.allowget(.net) */
+            return View(); /* , jsonrequestbehavior.allowget(.net) */
         }
 
         public async Task<IActionResult> Videos()
