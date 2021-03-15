@@ -10,15 +10,15 @@ using VimeoSample.Data;
 namespace VimeoSample.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210221040926_UploadRequestDbContext")]
-    partial class UploadRequestDbContext
+    [Migration("20210315040720_NomeCursos")]
+    partial class NomeCursos
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.3")
+                .HasAnnotation("ProductVersion", "5.0.4")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -168,6 +168,9 @@ namespace VimeoSample.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("CursoId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -221,6 +224,35 @@ namespace VimeoSample.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("VimeoSample.Models.Curso", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Data")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Descricao")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nome")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProfessorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProfessorId1")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProfessorId1");
+
+                    b.ToTable("Curso");
+                });
+
             modelBuilder.Entity("VimeoSample.Models.LocalUploadRequest", b =>
                 {
                     b.Property<int>("Id")
@@ -243,6 +275,9 @@ namespace VimeoSample.Migrations
                     b.Property<string>("ClipUri")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("CursoId")
+                        .HasColumnType("int");
+
                     b.Property<long>("FileLength")
                         .HasColumnType("bigint");
 
@@ -252,6 +287,8 @@ namespace VimeoSample.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("CursoId");
 
                     b.ToTable("localUploadRequests");
                 });
@@ -307,18 +344,36 @@ namespace VimeoSample.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("VimeoSample.Models.Curso", b =>
+                {
+                    b.HasOne("VimeoSample.Models.ApplicationUser", "Professor")
+                        .WithMany("Cursos")
+                        .HasForeignKey("ProfessorId1");
+
+                    b.Navigation("Professor");
+                });
+
             modelBuilder.Entity("VimeoSample.Models.LocalUploadRequest", b =>
                 {
                     b.HasOne("VimeoSample.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany("UploadRequests")
+                        .WithMany()
                         .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("VimeoSample.Models.Curso", null)
+                        .WithMany("Videos")
+                        .HasForeignKey("CursoId");
 
                     b.Navigation("ApplicationUser");
                 });
 
             modelBuilder.Entity("VimeoSample.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("UploadRequests");
+                    b.Navigation("Cursos");
+                });
+
+            modelBuilder.Entity("VimeoSample.Models.Curso", b =>
+                {
+                    b.Navigation("Videos");
                 });
 #pragma warning restore 612, 618
         }

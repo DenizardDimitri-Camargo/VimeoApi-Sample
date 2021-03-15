@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace VimeoSample.Migrations
 {
-    public partial class UploadRequestDbContext : Migration
+    public partial class Cursos : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -26,6 +26,7 @@ namespace VimeoSample.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CursoId = table.Column<int>(type: "int", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -153,6 +154,28 @@ namespace VimeoSample.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Curso",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Data = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Descricao = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProfessorId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ProfessorId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Curso", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Curso_AspNetUsers_ProfessorId1",
+                        column: x => x.ProfessorId1,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "localUploadRequests",
                 columns: table => new
                 {
@@ -164,7 +187,8 @@ namespace VimeoSample.Migrations
                     ClipUri = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FileLength = table.Column<long>(type: "bigint", nullable: false),
                     ClipId = table.Column<long>(type: "bigint", nullable: true),
-                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CursoId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -173,6 +197,12 @@ namespace VimeoSample.Migrations
                         name: "FK_localUploadRequests_AspNetUsers_ApplicationUserId",
                         column: x => x.ApplicationUserId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_localUploadRequests_Curso_CursoId",
+                        column: x => x.CursoId,
+                        principalTable: "Curso",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -217,9 +247,19 @@ namespace VimeoSample.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Curso_ProfessorId1",
+                table: "Curso",
+                column: "ProfessorId1");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_localUploadRequests_ApplicationUserId",
                 table: "localUploadRequests",
                 column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_localUploadRequests_CursoId",
+                table: "localUploadRequests",
+                column: "CursoId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -244,6 +284,9 @@ namespace VimeoSample.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Curso");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

@@ -92,15 +92,15 @@ namespace VimeoSample.Controllers
                         //user.ClipIdUser = uploadRequest.ClipId.Value; // coloco o ClipId no user Denizard
 
                         
-                        user.UploadRequests.Add(new LocalUploadRequest(
-                            uploadRequest.ChunkSize,
-                            uploadRequest.BytesWritten,
-                            uploadRequest.IsVerifiedComplete,
-                            uploadRequest.ClipUri,
-                            uploadRequest.FileLength,
-                            uploadRequest.ClipId,
-                            user                            
-                        ));
+                        //user.UploadRequests.Add(new LocalUploadRequest(
+                        //    uploadRequest.ChunkSize,
+                        //    uploadRequest.BytesWritten,
+                        //    uploadRequest.IsVerifiedComplete,
+                        //    uploadRequest.ClipUri,
+                        //    uploadRequest.FileLength,
+                        //    uploadRequest.ClipId,
+                        //    user                            
+                        //));
 
                         _applicationDbContext.SaveChanges(); // salvo as mudanças do user Denizard
                     }
